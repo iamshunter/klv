@@ -1,9 +1,11 @@
 package main
 import (
-       "fmt"
-       "hash/crc32"
-       "encoding/binary"
-       "encoding/hex"
+      "fmt"
+      "hash/crc32"
+      "encoding/binary"
+      "encoding/hex"
+
+      pb "ris"
        )
 
 func main() {
@@ -15,6 +17,7 @@ func main() {
         0x71, 0x50, 0x12, 0x30, 0x06, 0x10, 0x04, 0x00,
         0x06, 0x90, 0x78, 0xC0, 0x04 }
 
+    len := len(buff)
     sum := crc32.ChecksumIEEE(buff)
     fmt.Printf("ieeeSum %08x\n", sum)
 
@@ -24,4 +27,17 @@ func main() {
     buff = append(buff, sumBuf...)
 
     fmt.Printf("Buff\n%s\n", hex.Dump(buff))
+
+    rb := pb.RisBuffer{ 
+        Key: 1234,
+    }
+
+    fmt.Printf("%d\n", rb.GetKey())
+
+    rb.Key = 5678
+    rb.Data = buff[:len]
+    rb.Crc = crc32.ChecksumIEEE(rb.Data[:len])
+    fmt.Printf("%d\n", rb.GetKey())
+    fmt.Printf("Data\n%s\n", hex.Dump(rb.Data))
+    fmt.Printf("%x\n", rb.GetCrc() )
 }

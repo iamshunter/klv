@@ -1,7 +1,7 @@
 all : libklv.a klv.x tt
 
-tt : tt.go
-	go build tt.go
+tt : tt.go 
+	go build tt.go 
 
 libklv.a : l3Sum.o
 	ar r libklv.a l3Sum.o
@@ -18,4 +18,4 @@ klv.o : klv.cpp
 	g++ -std=gnu++11 -I. -c klv.cpp
 
 clean :
-	rm -f tt klv.o klv.x l3Sum.o libklv.a
+	rm -f tt klv.o klv.x l3Sum.o libklv.a t1.pb.go
