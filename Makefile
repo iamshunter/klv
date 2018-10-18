@@ -1,4 +1,4 @@
-all : libklv.a klv.x tt
+all : tt libklv.a klv.x
 
 tt : tt.go 
 	go build tt.go 
@@ -8,11 +8,11 @@ libklv.a : l3Sum.o
 	ranlib libklv.a
 	ar t libklv.a
 
-klv.x : klv.o
-	g++ -std=gnu++11 -I. -o klv.x klv.o -lz
-
 l3Sum.o : l3Sum.cpp l3Sum.h
-	g++ -std=gnu++11 -I. -c l3Sum.cpp
+	g++ -std=gnu++11 -I. -O3 -c l3Sum.cpp
+
+klv.x : klv.o libklv.a
+	g++ -std=gnu++11 -I. -o klv.x klv.o -lz -L. -lklv
 
 klv.o : klv.cpp
 	g++ -std=gnu++11 -I. -c klv.cpp
