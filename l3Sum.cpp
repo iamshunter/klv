@@ -2,8 +2,7 @@
 #include <zlib.h>
 #include "l3Sum.h"
 
-static const unsigned short CRC16Table[256] = 
-{
+static const unsigned short CRC16Table[256] = {
     0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
     0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
     0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
@@ -55,17 +54,17 @@ unsigned short crc16L3(const void *buffer, int nbytes, unsigned short crc)
     }
     return crc;
 }
+
 /* 
  * Overloaded function that starts with initial crc of 0
  */
-unsigned short crc16L3(const void *buffer, int nbytes )
+unsigned short crc16L3(const void *buffer, int nbytes)
 {
-    return crc16L3(buffer, nbytes, 0 );
+    return crc16L3(buffer, nbytes, 0);
 }
 
 /* Ethernet CRC-32 Table */
-const unsigned long crc32Table[256] = 
-{
+const unsigned long crc32Table[256] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
     0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
     0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2,
@@ -111,7 +110,7 @@ const unsigned long crc32Table[256] =
     0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
-unsigned long crc32L3(const void *buffer, int nbytes, unsigned int crcIn )
+unsigned long crc32L3(const void *buffer, int nbytes, unsigned int crcIn)
 {
     unsigned char *bPtr = (unsigned char *)buffer;
     for (int ii = 0; ii < nbytes; ii++)
@@ -125,4 +124,3 @@ unsigned long crc32L3(const void *buffer, int nbytes)
 {
     return crc32L3(buffer, nbytes, 0xFFFFFFFF);
 }
-
