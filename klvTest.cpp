@@ -2,6 +2,7 @@
 #include <string.h>
 #include <sys/timeb.h>
 #include <zlib.h>
+#include <time.h>
 #include "klvL1.h"
 #include "l3Sum.h"
 
@@ -111,27 +112,30 @@ int main(int argc, char **argv)
 
     len = 64;
     ans = encodeBER(len, &out, sizeof(out));
-    printf("BER   %6d %d %04x\n", len, ans, out);
+    //printf("BER   %6d %d %04x\n", len, ans, out);
     decodeBER(&out, &nMsg, &nLen);
-    printf("unBER  %5d %d\n", nMsg, nLen);
+    //printf("unBER  %5d %d\n", nMsg, nLen);
 
     len = 127;
     ans = encodeBER(len, &out, sizeof(out));
-    printf("BER   %6d %d %04x\n", len, ans, out);
+    //printf("BER   %6d %d %04x\n", len, ans, out);
     decodeBER(&out, &nMsg, &nLen);
-    printf("unBER  %5d %d\n", nMsg, nLen);
+    //printf("unBER  %5d %d\n", nMsg, nLen);
 
     len = 128;
     ans = encodeBER(len, &out, sizeof(out));
-    printf("BER   %6d %d %04x\n", len, ans, out);
+    //printf("BER   %6d %d %04x\n", len, ans, out);
     decodeBER(&out, &nMsg, &nLen);
-    printf("unBER  %5d %d\n", nMsg, nLen);
+    //printf("unBER  %5d %d\n", nMsg, nLen);
 
     len = 32760;
     ans = encodeBER(len, &out, sizeof(out));
-    printf("BER   %6d %d %04x\n", len, ans, out);
+    //printf("BER   %6d %d %04x\n", len, ans, out);
     decodeBER(&out, &nMsg, &nLen);
-    printf("unBER  %5d %d\n", nMsg, nLen);
+    //printf("unBER  %5d %d\n", nMsg, nLen);
+
+    printf("***********************************************************************\n");
+    printf("***********************************************************************\n");
 
     unsigned char msg[] = { 
         0x06, 0x0E, 0x2B, 0x34, 0x01, 0x01, 0x01, 0x01,  // Universal Key
@@ -156,23 +160,10 @@ int main(int argc, char **argv)
         0x39, 0x5C, 0x6F, 0xAB                // Value bytes 0-3, CRC
     };
 
-    // Time 1/1/2008
+    // Time 1/1/2008 00:00:00 (But I think that's not counting the TZ. I get 04:00 PDT)
     // Category 0x30
     // Command 0x10
     // Value 0x069078
-/*
-    if (memcmp(msg, UniversalKey, sizeof(UniversalKey)) == 0)
-    {
-        printf("Found Universal Key\n");
-        decodeBER(&msg[sizeof(UniversalKey)], &nMsg, &nLen);
-        printf("unBER  %5d %d\n", nMsg, nLen);
-    } 
-    else if (memcmp(msg, UniversalKeyExternal, sizeof(UniversalKey)) == 0)
-    {
-        printf("Found Universal Key External\n");
-    }
-
-*/
 
     bool stat = procLevel1(msg, sizeof(msg));
     printf("procLevel1 returned ");
