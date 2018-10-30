@@ -6,6 +6,17 @@
 #include "klvL1.h"
 #include "util.h"
 
+// BER is the acronym for Basic Encoding Rules.  From the L3 ICD:
+//
+// "If the first byte in the length field does not have the high bit set (0x80), 
+// then that single byte represents an integer between 0 and 127 and indicates 
+// the number of bytes that immediately follows in the Value field. If the high 
+// bit is set, then the lower seven bits indicate how many bytes follow that 
+// themselves make up a length field. For example if the first byte of a BER 
+// length field is binary 10000010, that would indicate that the next two bytes 
+// make up an integer that then indicates how many Value bytes follow. Therefore 
+// a total of three bytes were taken up to specify a length."
+//
 int encodeBER(int len, void *out, int outSize)
 {
 
