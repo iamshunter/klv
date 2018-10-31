@@ -1,5 +1,9 @@
 #ifndef _CATEGORY30_H_
 #define _CATEGORY30_H_
+#include <string.h>
+#include <stdint.h>
+
+#include "klvL1.h"
 
 #define TransmitEnableID    (0x01)
 #define FreqValueID         (0x10)
@@ -12,7 +16,7 @@
 #define InterleaverID       (0x26)
 #define ChannelMuxID        (0x27)
 #define TmSubChanBpsID      (0x30)
-#define TmSubChanFreqEncID  (0x31)
+#define TmSubChanEncID      (0x31)
 #define TmSubChanFreqDevID  (0x32)
 #define TmSubChanFreqOsetID (0x33)
 #define GuardIntervalID     (0x50)
@@ -50,4 +54,6 @@ typedef struct
    int8_t   txCardTemperature;
 } TransmitterType;
 
+int procTransmitter(void *ptr, TransmitterType *values, TransmitterType *changed);
+int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterType flags);
 #endif // _CATEGORY30_H_

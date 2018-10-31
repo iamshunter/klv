@@ -17,15 +17,8 @@ void crc16Test(void)
     printf("crc16-2 = %x\n", crc16L3(buffer, 9));
 }
 
-double getDoubleTime(void)
-{
-    struct timeb tval;
-    ftime(&tval);
-    return (tval.time + tval.millitm / 1000.0);
-}
-
 // Master table stores tables for the each page
-std::map<char, void *> categories;
+//std::map<char, void *> categories;
 
 //
 // There's a lot going on in this file.
@@ -184,20 +177,6 @@ int main(int argc, char **argv)
             0x04,                                        // Len=4 bytes
             0x39, 0x5C, 0x6F, 0xAB                       // Value bytes 0-3, CRC
     };
-    // Time 1/1/2008 00:00:00 (But I think that's not counting the TZ. I get 04:00 PDT)
-    // Category 0x30
-    // Command 0x10
-    // Value 0x069078
-    bool stat = procLevel1(msg_1_1, sizeof(msg_1_1));
-    printf("procLevel1 returned ");
-    if ( stat )
-    {
-        printf(" TRUE\n");
-    }
-    else
-    {
-        printf(" FALSE\n");
-    }
 
     // This is the message defined in section c.1.2 in the CMDL manual.
     // "Multiple Command Example"
@@ -259,8 +238,14 @@ int main(int argc, char **argv)
             
             0x30,                                        // Key - 0x30
             0x08,                                        // Len=8 bytes
-                0x10, 0x00, 0x20, 0x00,                  // Value 0-3
-                0x24, 0x00, 0x80, 0x00,                  // Value 4-7
+                0x10, 
+                    0x00, 
+                0x20, 
+                    0x00,
+                0x24, 
+                    0x00, 
+                0x80, 
+                    0x00,
             
             0x40,                                        // Key - 0x40
             0x04,                                        // Len=4 bytes
@@ -319,5 +304,97 @@ int main(int argc, char **argv)
             0x04,                                        // Len=4 bytes   
                 0x95, 0x60, 0x56, 0x1E
     };
+
+    for ( int ii = 0; ii < 5; ii++ )
+       printf("*1\n");
+    // Process message #1.
+    //   Time 1/1/2008 00:00:00 (But I think that's not counting the TZ. I get 04:00 PDT)
+    //   Category 0x30
+    //   Command 0x10
+    //   Value 0x069078
+    bool stat = procKLV(msg_1_1, sizeof(msg_1_1));
+    printf("msg_1_1 procKLV returned ");
+    if ( stat )
+    {
+        printf(" TRUE\n");
+    }
+    else
+    {
+        printf(" FALSE\n");
+    }
+
+    for ( int ii = 0; ii < 5; ii++ )
+       printf("*2\n");
+    stat = procKLV(msg_1_2, sizeof(msg_1_2));
+    printf("msg_1_2 procKLV returned ");
+    if ( stat )
+    {
+        printf(" TRUE\n");
+    }
+    else
+    {
+        printf(" FALSE\n");
+    }
+
+    for ( int ii = 0; ii < 5; ii++ )
+       printf("*3\n");
+    stat = procKLV(msg_1_3, sizeof(msg_1_3));
+    printf("msg_1_3 procKLV returned ");
+    if ( stat )
+    {
+        printf(" TRUE\n");
+    }
+    else
+    {
+        printf(" FALSE\n");
+    }
+
+    for ( int ii = 0; ii < 5; ii++ )
+       printf("*4\n");
+    stat = procKLV(msg_1_4, sizeof(msg_1_4));
+    printf("msg_1_4 procKLV returned ");
+    if ( stat )
+    {
+        printf(" TRUE\n");
+    }
+    else
+    {
+        printf(" FALSE\n");
+    }
+
+    ////////////////////////////////
+    int           numGen;
+    unsigned char outBuf[1024];
+    TransmitterType values, presentFlags;
+    memset(&presentFlags, 0, sizeof(TransmitterType));
+    memset(&outBuf,       0, sizeof(outBuf));
+    for ( int ii = 0; ii < 5; ii++ )
+       printf("G-1\n");
+
+    presentFlags.freqValue = 1;
+    values.freqValue       = 430200;
+    numGen = genTransmitter(outBuf, sizeof(outBuf), values, presentFlags);
+    printf("genTransmitter returned %d\n", numGen);
+    procKLV(outBuf, numGen);
+
+    memset(&presentFlags, 0, sizeof(TransmitterType));
+    memset(&outBuf,       0, sizeof(outBuf));
+    for ( int ii = 0; ii < 5; ii++ )
+       printf("G-2\n");
+    presentFlags.freqValue = 1;
+    values.freqValue       = 234567;
+
+    presentFlags.dataRate  = 1;
+    values.dataRate        = 40400;
+
+    presentFlags.modulation= 1;
+    values.modulation      = 2;
+
+    presentFlags.txPower   = 1;
+    values.txPower         = 0x40;
+
+    numGen = genTransmitter(outBuf, sizeof(outBuf), values, presentFlags);
+    printf("genTransmitter returned %d\n", numGen);
+    procKLV(outBuf, numGen);
 
 }

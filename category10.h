@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #define RestoreFactoryID    (0x10)
-#define SoftwareVersionID (0x21)
+#define SoftwareVersionID   (0x21)
 #define SystemNameID        (0x30)
 #define Configuration_00ID  (0x40)
 #define Configuration_01ID  (0x41)
