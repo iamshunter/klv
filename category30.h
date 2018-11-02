@@ -55,5 +55,5 @@ typedef struct
 } TransmitterType;
 
 int procTransmitter(void *ptr, TransmitterType *values, TransmitterType *changed);
-int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterType flags);
+int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterType flags, bool reqFlag);
 #endif // _CATEGORY30_H_

@@ -10,7 +10,9 @@
 // @todo - It does NOT check the size nor need to use BER to encode the message size
 // *********************************************
 //
-int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterType flags)
+// reqFlag is used to indicate we're generating a request-only message, no data.
+//
+int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterType flags, bool reqFlag)
 {
    int            numBytes=0, bytesLeft, masterSave, txSave=0;
    unsigned char *cPtr = (unsigned char *)ptr;
@@ -62,12 +64,20 @@ int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterT
       // Set the key
       cPtr[numBytes++] = TransmitEnableID;
 
-      // Set the size
-      cPtr[numBytes++] = sizeof(values.txEnable);
+      if (reqFlag)
+      {
+         // Set the size to 0, no data
+         cPtr[numBytes++] = 0;
+      }
+      else
+      {
+         // Set the size
+         cPtr[numBytes++] = sizeof(values.txEnable);
 
-      // Set the value
-      cPtr[numBytes] = values.txEnable;
-      numBytes += sizeof(values.txEnable);
+         // Set the value
+         cPtr[numBytes] = values.txEnable;
+         numBytes += sizeof(values.txEnable);
+      }
    }
 
    // Store the "Frequency Value" category and the length
@@ -76,12 +86,20 @@ int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterT
       // Set the key
       cPtr[numBytes++] = FreqValueID;
 
-      // Set the size
-      cPtr[numBytes++] = sizeof(values.freqValue);
+      if (reqFlag)
+      {
+         // Set the size to 0, no data
+         cPtr[numBytes++] = 0;
+      }
+      else
+      {
+         // Set the size
+         cPtr[numBytes++] = sizeof(values.freqValue);
 
-      // Set the value use swap
-      swap4(&values.freqValue, &cPtr[numBytes]);
-      numBytes += sizeof(values.freqValue);
+         // Set the value use swap
+         swap4(&values.freqValue, &cPtr[numBytes]);
+         numBytes += sizeof(values.freqValue);
+      }
    }
 
    // Store the "Data Rate" category and the length
@@ -90,12 +108,20 @@ int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterT
       // Set the key
       cPtr[numBytes++] = DataRateBpsID;
 
-      // Set the size
-      cPtr[numBytes++] = sizeof(values.dataRate);
+      if (reqFlag)
+      {
+         // Set the size to 0, no data
+         cPtr[numBytes++] = 0;
+      }
+      else
+      {
+         // Set the size
+         cPtr[numBytes++] = sizeof(values.dataRate);
 
-      // Set the value
-      swap4(&values.dataRate, &cPtr[numBytes]);
-      numBytes += sizeof(values.dataRate);
+         // Set the value
+         swap4(&values.dataRate, &cPtr[numBytes]);
+         numBytes += sizeof(values.dataRate);
+      }
    }
 
    //if ( flags.waveformCategory != 0 )
@@ -106,12 +132,20 @@ int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterT
       // Set the key
       cPtr[numBytes++] = ModulationID;
 
-      // Set the size
-      cPtr[numBytes++] = sizeof(values.modulation);
+      if (reqFlag)
+      {
+         // Set the size to 0, no data
+         cPtr[numBytes++] = 0;
+      }
+      else
+      {
+         // Set the size
+         cPtr[numBytes++] = sizeof(values.modulation);
 
-      // Set the value
-      cPtr[numBytes] = values.modulation;
-      numBytes += sizeof(values.modulation);
+         // Set the value
+         cPtr[numBytes] = values.modulation;
+         numBytes += sizeof(values.modulation);
+      }
    }
 
    //if ( flags.FEC != 0 )
@@ -130,12 +164,20 @@ int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterT
       // Set the key
       cPtr[numBytes++] = TransmitPowerID;
 
-      // Set the size
-      cPtr[numBytes++] = sizeof(values.txPower);
+      if (reqFlag)
+      {
+         // Set the size to 0, no data
+         cPtr[numBytes++] = 0;
+      }
+      else
+      {
+         // Set the size
+         cPtr[numBytes++] = sizeof(values.txPower);
 
-      // Set the value
-      cPtr[numBytes] = values.txPower;
-      numBytes += sizeof(values.txPower);
+         // Set the value
+         cPtr[numBytes] = values.txPower;
+         numBytes += sizeof(values.txPower);
+      }
    }
    *txLenPtr     = (char)(numBytes-txSave);
 
@@ -145,15 +187,11 @@ int genTransmitter(void *ptr, int maxBytes, TransmitterType values, TransmitterT
 
    // Append the checksum
    uint32_t masterSum=0;
-   printf("pre-sum nb %d\n", numBytes);
    cPtr[numBytes++] = Checksum;
    cPtr[numBytes++] = (char)sizeof(masterSum);
    numBytes += sizeof(masterSum);
 
    *masterLenPtr = (char)(numBytes-masterSave);
-   printf("masterLenPtr %02X\n", *masterLenPtr);
-   printf("txLenPtr %02X\n", *txLenPtr);
-   printf("pre txLenPtr %02X\n", txLenPtr[-1]);
 
    int numSum = numBytes-sizeof(masterSum);
    masterSum = crc32(0x00000000, (const unsigned char *)cPtr, numSum);

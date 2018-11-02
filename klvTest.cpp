@@ -373,7 +373,7 @@ int main(int argc, char **argv)
 
     presentFlags.freqValue = 1;
     values.freqValue       = 430200;
-    numGen = genTransmitter(outBuf, sizeof(outBuf), values, presentFlags);
+    numGen = genTransmitter(outBuf, sizeof(outBuf), values, presentFlags, false);
     printf("genTransmitter returned %d\n", numGen);
     procKLV(outBuf, numGen);
 
@@ -393,7 +393,21 @@ int main(int argc, char **argv)
     presentFlags.txPower   = 1;
     values.txPower         = 0x40;
 
-    numGen = genTransmitter(outBuf, sizeof(outBuf), values, presentFlags);
+    numGen = genTransmitter(outBuf, sizeof(outBuf), values, presentFlags, false);
+    printf("genTransmitter returned %d\n", numGen);
+    procKLV(outBuf, numGen);
+
+
+    memset(&presentFlags, 0, sizeof(TransmitterType));
+    memset(&outBuf,       0, sizeof(outBuf));
+    for ( int ii = 0; ii < 5; ii++ )
+       printf("G-3\n");
+    presentFlags.freqValue = 1;
+    presentFlags.dataRate  = 1;
+    presentFlags.modulation= 1;
+    presentFlags.txPower   = 1;
+
+    numGen = genTransmitter(outBuf, sizeof(outBuf), values, presentFlags, true);
     printf("genTransmitter returned %d\n", numGen);
     procKLV(outBuf, numGen);
 
